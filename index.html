@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function(){
+      var sw = window.screen.width;
+      if (sw > 1440) {
+        document.documentElement.style.zoom = (sw / 1440).toFixed(3);
+      }
+    })();
+  </script>
   <title>Moneyshot — Kreativní Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
