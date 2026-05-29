@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    // Nastaví viewport na 1440px na velkých monitorech — layout se pak proporcionálně zvětší
+    if (window.screen.width >= 2560) {
+      document.querySelector('meta[name="viewport"]').content = 'width=1440';
+    } else if (window.screen.width >= 1920) {
+      document.querySelector('meta[name="viewport"]').content = 'width=1440';
+    }
+  </script>
   <title>Moneyshot — Kreativní Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2862,15 +2870,5 @@
     draw();
   </script>
 
-  <script>
-    // ── PROPORTIONAL SCALING pro velké monitory ──
-    const BASE_WIDTH = 1440;
-    function applyZoom() {
-      const w = window.innerWidth;
-      document.documentElement.style.zoom = w > BASE_WIDTH ? (w / BASE_WIDTH) : '';
-    }
-    applyZoom();
-    window.addEventListener('resize', applyZoom);
-  </script>
 </body>
 </html>
