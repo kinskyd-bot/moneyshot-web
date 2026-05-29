@@ -1879,51 +1879,51 @@
       <div class="projects-col">
         <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Biolife.mp4">
           <div class="project-bg"></div>
-          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Biolife.mp4" type="video/mp4"></video>
+          <video class="project-video" muted loop playsinline preload="none"><source data-src="video_compressed/Biolife.mp4" type="video/mp4"></video>
           <div class="project-overlay"><span class="project-name">Biolife</span><span class="project-category">Videoprodukce</span></div>
         </div>
         <div class="project-item project-item--zoom" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/George_videoklip.mp4">
           <div class="project-bg"></div>
-          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/George_videoklip.mp4" type="video/mp4"></video>
+          <video class="project-video" muted loop playsinline preload="none"><source data-src="video_compressed/George_videoklip.mp4" type="video/mp4"></video>
           <div class="project-overlay"><span class="project-name">George Videoklip</span><span class="project-category">Videoprodukce</span></div>
         </div>
         <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Matrix media.mp4">
           <div class="project-bg"></div>
-          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Matrix media.mp4" type="video/mp4"></video>
+          <video class="project-video" muted loop playsinline preload="none"><source data-src="video_compressed/Matrix media.mp4" type="video/mp4"></video>
           <div class="project-overlay"><span class="project-name">Matrix Media</span><span class="project-category">Social media</span></div>
         </div>
       </div>
       <div class="projects-col">
         <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Max steakhouse.mp4">
           <div class="project-bg"></div>
-          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Max steakhouse.mp4" type="video/mp4"></video>
+          <video class="project-video" muted loop playsinline preload="none"><source data-src="video_compressed/Max steakhouse.mp4" type="video/mp4"></video>
           <div class="project-overlay"><span class="project-name">Max Steakhouse</span><span class="project-category">Komerční foto</span></div>
         </div>
         <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Misura.mp4">
           <div class="project-bg"></div>
-          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Misura.mp4" type="video/mp4"></video>
+          <video class="project-video" muted loop playsinline preload="none"><source data-src="video_compressed/Misura.mp4" type="video/mp4"></video>
           <div class="project-overlay"><span class="project-name">Misura</span><span class="project-category">Videoprodukce</span></div>
         </div>
         <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/OVB.mp4">
           <div class="project-bg"></div>
-          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/OVB.mp4" type="video/mp4"></video>
+          <video class="project-video" muted loop playsinline preload="none"><source data-src="video_compressed/OVB.mp4" type="video/mp4"></video>
           <div class="project-overlay"><span class="project-name">OVB</span><span class="project-category">Videoprodukce</span></div>
         </div>
       </div>
       <div class="projects-col">
         <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Shaolin.mp4">
           <div class="project-bg"></div>
-          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Shaolin.mp4" type="video/mp4"></video>
+          <video class="project-video" muted loop playsinline preload="none"><source data-src="video_compressed/Shaolin.mp4" type="video/mp4"></video>
           <div class="project-overlay"><span class="project-name">Shaolin</span><span class="project-category">Videoprodukce</span></div>
         </div>
         <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Swibli.mp4">
           <div class="project-bg"></div>
-          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Swibli.mp4" type="video/mp4"></video>
+          <video class="project-video" muted loop playsinline preload="none"><source data-src="video_compressed/Swibli.mp4" type="video/mp4"></video>
           <div class="project-overlay"><span class="project-name">Swibli</span><span class="project-category">Social media</span></div>
         </div>
         <div class="project-item project-item--zoom" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/TCD.mp4">
           <div class="project-bg"></div>
-          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/TCD.mp4" type="video/mp4"></video>
+          <video class="project-video" muted loop playsinline preload="none"><source data-src="video_compressed/TCD.mp4" type="video/mp4"></video>
           <div class="project-overlay"><span class="project-name">TCD</span><span class="project-category">Videoprodukce</span></div>
         </div>
       </div>
@@ -2562,21 +2562,37 @@
       heroVideo.play().catch(() => {});
     }
 
-    // ── Project video hover play + static thumbnail frame ──
+    // ── Project video hover play + lazy load ──
     const frameTimes = [2, 1.5, 3, 2, 1, 2.5, 35, 2, 3];
 
     document.querySelectorAll('.project-video').forEach((vid, i) => {
       const t = frameTimes[i] || 2;
       const item = vid.closest('.project-item');
+      const source = vid.querySelector('source');
+      let loaded = false;
 
-      // Seek to thumbnail frame once enough data is loaded
-      const showFrame = () => { vid.currentTime = t; };
-      vid.addEventListener('loadeddata', showFrame, { once: true });
-      vid.addEventListener('loadedmetadata', () => {
-        if (vid.readyState >= 2) showFrame();
-      }, { once: true });
+      const loadVideo = () => {
+        if (loaded) return;
+        loaded = true;
+        // Move data-src → src to trigger actual download
+        if (source && source.dataset.src) {
+          source.src = source.dataset.src;
+          vid.load();
+        }
+        const showFrame = () => { vid.currentTime = t; };
+        vid.addEventListener('loadeddata', showFrame, { once: true });
+        vid.addEventListener('loadedmetadata', () => {
+          if (vid.readyState >= 2) showFrame();
+        }, { once: true });
+      };
 
-      item.addEventListener('mouseenter', () => { vid.play(); });
+      // Load when item enters viewport
+      const observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { loadVideo(); observer.disconnect(); }
+      }, { rootMargin: '200px' });
+      observer.observe(item);
+
+      item.addEventListener('mouseenter', () => { loadVideo(); vid.play(); });
       item.addEventListener('mouseleave', () => {
         vid.pause();
         vid.currentTime = t;
@@ -2772,13 +2788,15 @@
     const canvas = document.getElementById('dotCanvas');
     const ctx = canvas.getContext('2d');
 
-    const SPACING = 18;
+    const SPACING = 24;        // větší spacing = ~44 % méně teček
     const DOT_BASE = 0.8;
     const DOT_MAX = 3;
-    const RADIUS = 560;
+    const RADIUS = 520;
+    const RADIUS_SQ = RADIUS * RADIUS;
 
     let mouse = { x: -9999, y: -9999 };
     let cols, rows, dots = [];
+    let dirty = true;
 
     function resize() {
       canvas.width  = window.innerWidth;
@@ -2788,9 +2806,10 @@
       dots = [];
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-          dots.push({ x: c * SPACING, y: r * SPACING, size: DOT_BASE });
+          dots.push({ x: c * SPACING, y: r * SPACING });
         }
       }
+      dirty = true;
     }
 
     window.addEventListener('resize', resize);
@@ -2799,32 +2818,44 @@
     window.addEventListener('mousemove', e => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
+      dirty = true;
     });
 
     window.addEventListener('mouseleave', () => {
       mouse.x = -9999;
       mouse.y = -9999;
+      dirty = true;
     });
 
     function draw() {
+      requestAnimationFrame(draw);
+      if (!dirty) return;   // překreslí jen když se myš pohnula
+      dirty = false;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       for (const dot of dots) {
         const dx = dot.x - mouse.x;
         const dy = dot.y - mouse.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const influence = Math.max(0, 1 - dist / RADIUS);
-        const size = DOT_BASE + (DOT_MAX - DOT_BASE) * influence * influence;
-        const alpha = 0.05 + 0.12 * influence * influence;
-        const brightness = Math.round(45 + 55 * influence * influence);
+        const distSq = dx * dx + dy * dy;
+
+        let size, alpha, brightness;
+        if (distSq > RADIUS_SQ) {
+          // mimo dosah — bez sqrt, pevné hodnoty
+          size = DOT_BASE; alpha = 0.05; brightness = 45;
+        } else {
+          const inf = 1 - Math.sqrt(distSq) / RADIUS;
+          const inf2 = inf * inf;
+          size = DOT_BASE + (DOT_MAX - DOT_BASE) * inf2;
+          alpha = 0.05 + 0.12 * inf2;
+          brightness = Math.round(45 + 55 * inf2);
+        }
 
         ctx.beginPath();
         ctx.arc(dot.x, dot.y, size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${brightness},${brightness},${brightness},${alpha})`;
         ctx.fill();
       }
-
-      requestAnimationFrame(draw);
     }
 
     draw();
