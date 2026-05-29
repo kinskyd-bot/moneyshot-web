@@ -20,6 +20,8 @@
       --grad: linear-gradient(135deg, #f5c41a 0%, #e8720c 100%);
       --grad-glow-a: rgba(245,196,26,.3);
       --grad-glow-b: rgba(232,114,12,.4);
+      --container-width: min(90vw, 1800px);
+      --container-padding: clamp(24px, 5vw, 80px);
     }
 
     html {
@@ -34,13 +36,6 @@
       color: var(--white);
       font-family: 'Space Grotesk', sans-serif;
       overflow-x: hidden;
-    }
-
-    /* ── PROPORTIONAL SCALING na velkých monitorech ── */
-    @media (min-width: 1441px) {
-      html {
-        zoom: calc(100vw / 1440);
-      }
     }
 
     /* ── ABSTRACT BACKGROUND ── */
@@ -59,11 +54,11 @@
       align-items: center;
       justify-content: space-between;
       background: transparent;
-      max-width: 1440px;
+      max-width: var(--container-width);
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
-      padding: 0 clamp(24px, 5vw, 80px);
+      padding: 0 var(--container-padding);
       border-bottom: none;
       transition: transform .45s cubic-bezier(.25,.46,.45,.94);
     }
@@ -158,8 +153,8 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 40px clamp(24px, 5vw, 80px) 48px;
-      max-width: 1440px;
+      padding: 40px var(--container-padding) 48px;
+      max-width: var(--container-width);
       margin: 0 auto;
       width: 100%;
     }
@@ -243,7 +238,7 @@
     }
 
     .ticker-wrap {
-      max-width: 1280px;
+      max-width: var(--container-width);
       margin: 0 auto;
       position: relative;
     }
@@ -409,8 +404,8 @@
 
     /* ── SECTION COMMON ── */
     .section {
-      padding: 112px 48px;
-      max-width: 1280px;
+      padding: 112px var(--container-padding);
+      max-width: var(--container-width);
       margin-left: auto;
       margin-right: auto;
     }
@@ -2004,7 +1999,7 @@
   <div style="height: 80px;"></div>
 
   <!-- ── BLOK: JAK PŘEMÝŠLÍME + JAK TO FUNGUJE ── -->
-  <div style="background: var(--gray-dark); max-width: 1280px; margin: 0 auto; border-radius: 16px; overflow: hidden;">
+  <div style="background: var(--gray-dark); max-width: var(--container-width); margin: 0 auto; border-radius: 16px; overflow: hidden;">
 
   <!-- ── VIDEOPRODUKCE ── -->
   <section id="videoprodukce" class="section" style="padding-top: 56px;">
