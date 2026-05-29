@@ -1,0 +1,2833 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moneyshot — Kreativní Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="libs/locomotive-scroll.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #080808;
+      --white: #ffffff;
+      --gray-light: #888888;
+      --gray-mid: #2a2a2a;
+      --gray-dark: #141414;
+      --grad: linear-gradient(135deg, #f5c41a 0%, #e8720c 100%);
+      --grad-glow-a: rgba(245,196,26,.3);
+      --grad-glow-b: rgba(232,114,12,.4);
+    }
+
+    html {
+      scroll-behavior: auto; /* Locomotive handles smoothness */
+    }
+
+    html.has-scroll-smooth { overflow: hidden; }
+    html.has-scroll-dragging { user-select: none; }
+
+    body {
+      background-color: var(--black);
+      color: var(--white);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── ABSTRACT BACKGROUND ── */
+
+    #scroll-container {
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 200;
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: transparent;
+      max-width: 1280px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      padding: 0 48px;
+      border-bottom: none;
+      transition: transform .45s cubic-bezier(.25,.46,.45,.94);
+    }
+
+    nav.nav--hidden {
+      transform: translateX(-50%) translateY(-100%);
+    }
+
+    .nav__logo { height: 58px; display: block; margin-top: 8px; }
+    .nav__logo img { height: 100%; width: auto; display: block; }
+
+    .nav__links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav__links a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      transition: color .25s;
+    }
+    .nav__links a:hover { color: var(--white); }
+
+    .nav__cta {
+      background: linear-gradient(135deg, #c84b00 0%, #e8720c 50%, #c84b00 100%);
+      background-size: 200% 200%;
+      border: none;
+      color: var(--white);
+      padding: 9px 22px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 100px;
+      transition: background-position .4s ease, box-shadow .3s ease;
+      box-shadow: 0 4px 20px rgba(200, 75, 0, .3);
+    }
+    .nav__cta:hover {
+      background-position: right center;
+      box-shadow: 0 6px 28px rgba(200, 75, 0, .5);
+    }
+
+    /* ── HERO ── */
+    #hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 72px 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero__video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140%;
+      height: 140%;
+      object-fit: cover;
+      z-index: 0;
+      display: block;
+    }
+
+    .hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 1;
+    }
+
+    .hero__gradient {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 280px;
+      background: linear-gradient(to bottom, transparent, var(--black));
+      z-index: 2;
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 64px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero__top {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-top: -80px;
+    }
+
+    .hero__label {
+      font-size: 11px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 24px;
+    }
+
+    .hero__headline {
+      font-size: clamp(36px, 4.5vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      margin-bottom: 40px;
+      max-width: 680px;
+    }
+
+    .hero__headline em {
+      font-style: italic;
+      font-weight: 700;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero__bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .hero__rating {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .hero__stars {
+      font-size: 18px;
+      color: #f5a623;
+      letter-spacing: .04em;
+    }
+
+    .hero__stars span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      margin-left: 4px;
+    }
+
+    .hero__rating-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,.45);
+      letter-spacing: .02em;
+    }
+
+    .hero__rating-sub a {
+      color: rgba(255,255,255,.65);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .hero__actions { display: flex; gap: 16px; align-items: center; }
+
+    .ticker--hero {
+      position: relative;
+      z-index: 2;
+    }
+
+    .ticker-wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .ticker-wrap::before,
+    .ticker-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 220px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .ticker-wrap::before {
+      left: 0;
+      background: linear-gradient(to right, var(--black) 0%, transparent 100%);
+    }
+
+    .ticker-wrap::after {
+      right: 0;
+      background: linear-gradient(to left, var(--black) 0%, transparent 100%);
+    }
+
+    .btn-primary {
+      background: linear-gradient(var(--black), var(--black)) padding-box,
+                  var(--grad) border-box;
+      border: 1.5px solid transparent;
+      color: #f5c41a;
+      padding: 14px 36px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-block;
+      border-radius: 100px;
+      box-shadow: 0 0 18px var(--grad-glow-a);
+      transition: box-shadow .3s ease, color .3s ease, background .3s ease;
+    }
+    .btn-primary:hover {
+      background: var(--grad) padding-box, var(--grad) border-box;
+      color: #fff;
+      box-shadow: 0 0 32px var(--grad-glow-b), 0 0 8px var(--grad-glow-a);
+    }
+
+    .btn-hero {
+      background: linear-gradient(var(--black), var(--black)) padding-box,
+                  var(--grad) border-box;
+      border: 1.5px solid transparent;
+      color: #f5c41a;
+      padding: 14px 36px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-block;
+      border-radius: 100px;
+      box-shadow: 0 0 18px var(--grad-glow-a);
+      transition: box-shadow .3s ease, color .3s ease, background .3s ease;
+    }
+    .btn-hero:hover {
+      background: var(--grad) padding-box, var(--grad) border-box;
+      color: #fff;
+      box-shadow: 0 0 32px var(--grad-glow-b), 0 0 8px var(--grad-glow-a);
+    }
+
+    .btn-ghost {
+      color: rgba(255,255,255,.7);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 14px 36px;
+      border-radius: 100px;
+      transition: color .25s, border-color .25s, background .25s;
+    }
+    .btn-ghost:hover {
+      color: var(--white);
+      border-color: rgba(255,255,255,.6);
+      background: rgba(255,255,255,.06);
+    }
+
+    .hero__visual { position: relative; }
+
+    .hero__placeholder {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--gray-dark);
+      border: 1px solid var(--gray-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #444;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    /* ── TICKER ── */
+    .ticker {
+      overflow: hidden;
+      border-top: 1px solid var(--gray-mid);
+      border-bottom: 1px solid var(--gray-mid);
+      padding: 28px 0;
+    }
+
+    .ticker__track {
+      display: flex;
+      white-space: nowrap;
+      will-change: transform;
+    }
+
+    .ticker__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      padding: 0 40px;
+      font-size: 12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--gray-light);
+      flex-shrink: 0;
+    }
+
+    .ticker__sep {
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.2);
+      margin: 0 40px;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+
+    .ticker__logo {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+      padding: 0 48px;
+    }
+
+    .ticker__logo img {
+      height: 44px;
+      width: auto;
+      display: block;
+      filter: brightness(0) invert(1);
+      opacity: 0.4;
+      transition: opacity .3s ease;
+    }
+
+    .ticker__logo img:hover {
+      opacity: 0.75;
+    }
+
+
+    /* ── SECTION COMMON ── */
+    .section {
+      padding: 112px 48px;
+      max-width: 1280px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section__label {
+      font-size: 13px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .section__title {
+      font-size: clamp(32px, 3.6vw, 56px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -.025em;
+      margin-bottom: 64px;
+    }
+
+    .section__title em {
+      font-style: normal;
+      font-weight: 700;
+      color: rgba(255,255,255,.28);
+    }
+
+    /* ── PROJEKTY ── */
+    #projekty { padding-top: 80px; }
+
+    .projects-grid {
+      display: flex;
+      gap: 6px;
+    }
+
+    .projects-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .projects-col:nth-child(1) .project-item:nth-child(1) { aspect-ratio: 4/3; }
+    .projects-col:nth-child(1) .project-item:nth-child(2) { aspect-ratio: 3/4; }
+    .projects-col:nth-child(1) .project-item:nth-child(3) { aspect-ratio: 4/3; }
+
+    .projects-col:nth-child(2) .project-item:nth-child(1) { aspect-ratio: 4/3; }
+    .projects-col:nth-child(2) .project-item:nth-child(2) { aspect-ratio: 2/3; }
+    .projects-col:nth-child(2) .project-item:nth-child(3) { aspect-ratio: 4/3; }
+
+    .projects-col:nth-child(3) .project-item:nth-child(1) { aspect-ratio: 3/4; }
+    .projects-col:nth-child(3) .project-item:nth-child(2) { aspect-ratio: 4/3; }
+    .projects-col:nth-child(3) .project-item:nth-child(3) { aspect-ratio: 3/4; }
+
+    .project-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(72px);
+      transition: opacity .7s cubic-bezier(.25,.46,.45,.94),
+                  transform .7s cubic-bezier(.25,.46,.45,.94);
+      z-index: 1;
+      border-radius: 8px;
+    }
+
+    .project-item.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* hover: scale up, push others back */
+    .projects-grid:has(.project-item:hover) .project-item:not(:hover) {
+      transform: scale(.96);
+      opacity: .55;
+      transition: transform .45s cubic-bezier(.25,.46,.45,.94),
+                  opacity .45s ease;
+    }
+
+    .project-item.in-view:hover {
+      transform: scale(1.09) translateY(-6px);
+      z-index: 10;
+      transition: transform .45s cubic-bezier(.25,.46,.45,.94),
+                  opacity .45s ease,
+                  z-index 0s;
+    }
+
+    .project-bg {
+      position: absolute;
+      inset: 0;
+      background: var(--gray-dark);
+    }
+
+    .project-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
+      display: block;
+      filter: grayscale(1);
+      transition: filter .55s ease;
+    }
+
+    .project-item:hover .project-video {
+      filter: grayscale(0);
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    .project-item--zoom .project-video {
+      transform: translate(-50%, -50%) scale(1.35);
+    }
+
+    .project-item--zoom:hover .project-video {
+      transform: translate(-50%, -50%) scale(1.4);
+    }
+
+    /* ── MODAL ── */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.92);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .35s ease;
+    }
+
+    .modal.is-open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal__inner {
+      position: relative;
+      width: 90vw;
+      max-height: 88vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal__video {
+      width: 100%;
+      max-height: 88vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .modal__image {
+      max-width: 100%;
+      max-height: 88vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .modal__close {
+      position: absolute;
+      top: -48px;
+      right: 0;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 28px;
+      cursor: pointer;
+      line-height: 1;
+      opacity: .6;
+      transition: opacity .2s;
+    }
+
+    .modal__close:hover { opacity: 1; }
+
+    .project-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,0) 60%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+    }
+
+    .project-name {
+      font-size: clamp(20px, 2.4vw, 36px);
+      font-weight: 600;
+      letter-spacing: -.01em;
+      line-height: 1.15;
+      transition: font-size .4s cubic-bezier(.25,.46,.45,.94);
+    }
+
+    .project-item:hover .project-name {
+      font-size: 17px;
+    }
+
+    .project-category {
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gray-light);
+      margin-top: 5px;
+    }
+
+    .projects-footer {
+      margin-top: 48px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ── VIDEOPRODUKCE ── */
+    #videoprodukce {
+      border-top: 1px solid var(--gray-mid);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-bottom: 32px;
+    }
+
+    /* ── WORKFLOW ── */
+    .wf-section {
+      border-top: 1px solid var(--gray-mid);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .wf-header { margin-bottom: 56px; }
+    .wf-muted { color: rgba(255,255,255,.28); }
+
+    .wf-title {
+      font-size: clamp(36px, 3.5vw, 56px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin: 12px 0 20px;
+    }
+
+    .wf-subtitle {
+      font-size: 15px;
+      line-height: 1.7;
+      color: rgba(255,255,255,.45);
+    }
+
+    .wf-steps { display: flex; flex-direction: column; }
+
+    .wf-step {
+      border-top: 1px solid var(--gray-mid);
+      overflow: hidden;
+      cursor: default;
+      position: relative;
+      transition: background .3s ease;
+    }
+
+    .wf-step:last-child { border-bottom: 1px solid var(--gray-mid); }
+
+    .wf-step::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--grad);
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+
+    .wf-step:hover::before,
+    .wf-step.is-open::before { opacity: 1; }
+    .wf-step:hover { background: rgba(255,255,255,.02); }
+
+    .wf-step__top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 0 22px 16px;
+    }
+
+    .wf-step__num {
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: .1em;
+      flex-shrink: 0;
+      width: 24px;
+    }
+
+    .wf-step__name {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.2;
+      flex: 1;
+    }
+
+    .wf-step__arrow {
+      font-size: 20px;
+      color: rgba(255,255,255,.2);
+      flex-shrink: 0;
+      transition: color .3s, transform .4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .wf-step.is-open .wf-step__arrow {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transform: rotate(45deg);
+    }
+
+    .wf-step__top { cursor: pointer; }
+
+    .wf-step__body {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height .55s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  opacity .35s ease .05s;
+    }
+
+    .wf-step.is-open .wf-step__body {
+      max-height: 500px;
+      opacity: 1;
+    }
+
+    .wf-step__body-inner {
+      padding: 0 0 24px 16px;
+      text-align: left;
+    }
+
+    .wf-step__body p {
+      font-size: 14px;
+      line-height: 1.75;
+      color: rgba(255,255,255,.5);
+      margin: 0 0 12px;
+    }
+
+    .wf-step__body p:last-child { margin-bottom: 0; }
+
+    .wf-step__note {
+      margin-top: 16px;
+      background: rgba(245,196,26,.04);
+      border: 1px solid rgba(245,196,26,.15);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+
+    .wf-step__note strong {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .wf-step__note p {
+      font-size: 13px !important;
+      color: rgba(255,255,255,.4) !important;
+      margin: 0 !important;
+    }
+
+    .wf-right {
+      position: sticky;
+      top: 100px;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+    }
+
+    .wf-right img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+    }
+
+    /* ── FAQ ── */
+    .faq-section {
+      border-top: 1px solid var(--gray-mid);
+    }
+
+    .faq-header { margin-bottom: 48px; }
+
+    .faq-title {
+      font-size: clamp(36px, 3.5vw, 56px);
+      font-weight: 700;
+      line-height: 1.05;
+      margin: 12px 0 0;
+    }
+
+    .faq-steps { display: flex; flex-direction: column; }
+
+    .faq-step {
+      border-top: 1px solid var(--gray-mid);
+      overflow: hidden;
+      cursor: default;
+      position: relative;
+      transition: background .3s ease;
+    }
+
+    .faq-step:last-child { border-bottom: 1px solid var(--gray-mid); }
+
+    .faq-step::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--grad);
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+
+    .faq-step:hover::before,
+    .faq-step.is-open::before { opacity: 1; }
+    .faq-step:hover { background: rgba(255,255,255,.02); }
+
+    .faq-step__top {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 0 22px 16px;
+    }
+
+    .faq-step__num {
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: .1em;
+      flex-shrink: 0;
+      width: 28px;
+    }
+
+    .faq-step__q {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.2;
+      flex: 1;
+    }
+
+    .faq-step__arrow {
+      font-size: 20px;
+      color: rgba(255,255,255,.2);
+      flex-shrink: 0;
+      transition: color .3s, transform .4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .faq-step.is-open .faq-step__arrow {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      transform: rotate(45deg);
+    }
+
+    .faq-step__top { cursor: pointer; }
+
+    .faq-step__body {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height .55s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  opacity .35s ease .05s;
+    }
+
+    .faq-step.is-open .faq-step__body {
+      max-height: 600px;
+      opacity: 1;
+    }
+
+    .faq-step__body-inner {
+      padding: 0 0 24px 44px;
+    }
+
+    .faq-step__body p {
+      font-size: 14px;
+      line-height: 1.75;
+      color: rgba(255,255,255,.5);
+      margin: 0 0 12px;
+    }
+
+    .faq-step__body p:last-child { margin-bottom: 0; }
+
+    .faq-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 80px;
+    }
+
+    .service-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .service-visual {
+      aspect-ratio: 16/10;
+      background: var(--gray-dark);
+      border: 1px solid var(--gray-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #444;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .service-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .service-content p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 28px;
+    }
+
+    .service-list { list-style: none; margin-bottom: 40px; }
+
+    .service-list li {
+      padding: 13px 0;
+      border-bottom: 1px solid var(--gray-mid);
+      font-size: 14px;
+      color: rgba(255,255,255,.65);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .service-list li::before {
+      content: '—';
+      color: rgba(255,255,255,.18);
+      flex-shrink: 0;
+    }
+
+    .service-list--large {
+      width: 100%;
+    }
+
+    .service-list--large li {
+      font-size: clamp(20px, 2.2vw, 32px);
+      font-weight: 500;
+      letter-spacing: -.02em;
+      color: var(--white);
+      padding: 16px 0;
+      border-bottom: 1px solid var(--gray-mid);
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 14px;
+      text-align: right;
+      width: 100%;
+    }
+
+    .service-list--large li::after {
+      content: '•';
+      color: var(--white);
+      font-size: 1em;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .service-list--large li::before {
+      display: none;
+    }
+
+    /* ── VIDEOPRODUKCE NEW ── */
+    .vp-main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      margin-top: 8px;
+    }
+
+    .vp-label {
+      font-size: 13px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .vp-headline {
+      font-size: clamp(32px, 3.6vw, 56px);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -.025em;
+      margin-bottom: 28px;
+    }
+
+    .vp-headline .muted {
+      color: rgba(255,255,255,.28);
+    }
+
+    .vp-body {
+      font-size: 15px;
+      line-height: 1.75;
+      color: rgba(255,255,255,.55);
+      max-width: 440px;
+    }
+
+    .vp-card {
+      background: #111111;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      padding: 32px;
+    }
+
+    .vp-card__label {
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      margin-bottom: 24px;
+    }
+
+    .vp-member {
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      cursor: default;
+    }
+
+    .vp-member:last-of-type { border-bottom: none; }
+
+    .vp-member__top {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .vp-member__top > div {
+      padding-top: 0;
+      margin-top: -4px;
+    }
+
+    .vp-member__bio {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s ease, margin-top 0.35s ease;
+      margin-top: 0;
+    }
+
+    .vp-member:hover .vp-member__bio {
+      max-height: 160px;
+      opacity: 1;
+      margin-top: 14px;
+    }
+
+    .vp-member__role {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .vp-member__bio p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255,255,255,.5);
+      margin: 0;
+    }
+
+    .vp-member__avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .vp-member__avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+      filter: grayscale(1) contrast(1.05);
+      transition: filter .4s ease;
+    }
+
+    .vp-member:hover .vp-member__avatar img {
+      filter: grayscale(0) contrast(1);
+    }
+
+    .vp-member__name {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .vp-member__firstname {
+      font-size: 22px;
+      font-weight: 700;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      line-height: 1;
+      margin-bottom: 4px;
+      margin-top: 0;
+    }
+
+    .vp-member__desc {
+      font-size: 13px;
+      color: rgba(255,255,255,.45);
+    }
+
+    .vp-quote {
+      margin-top: 24px;
+      font-style: italic;
+      font-size: 13px;
+      color: rgba(255,255,255,.3);
+      line-height: 1.6;
+    }
+
+    /* ── CO TVOŘÍME strip ── */
+    .vp-services-label {
+      font-size: 13px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .vp-services-label span {
+      font-style: italic;
+      font-weight: 300;
+      letter-spacing: 0;
+      text-transform: none;
+      font-size: 12px;
+      color: rgba(255,255,255,.3);
+    }
+
+    .vp-services {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      overflow: visible;
+    }
+
+    .vp-service-item {
+      flex: 1;
+      height: 96px;
+      background: #111111;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 12px;
+      padding: 20px 18px;
+      overflow: hidden;
+      position: relative;
+      cursor: default;
+      min-width: 0;
+      z-index: 1;
+      transition: flex .5s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  height .5s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  border-color .3s;
+    }
+
+    .vp-service-item:hover {
+      flex: 2;
+      height: 220px;
+      z-index: 2;
+      border-color: rgba(255,255,255,.2);
+    }
+
+    .vp-service-item__content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .vp-service-video-wrap {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity .4s ease;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .vp-service-item:hover .vp-service-video-wrap {
+      opacity: 1;
+    }
+
+    .vp-service-video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .vp-service-num {
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: inline-block;
+      letter-spacing: .05em;
+      margin-bottom: 10px;
+    }
+
+    .vp-service-name {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--white);
+    }
+
+    /* ── FOTO ── */
+    #foto {
+      border-top: 1px solid var(--gray-mid);
+    }
+
+    /* ── FOTO CAROUSEL ── */
+    .foto-carousel-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .foto-carousel {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      cursor: grab;
+      user-select: none;
+      padding-bottom: 2px;
+    }
+
+    .foto-carousel::-webkit-scrollbar { display: none; }
+    .foto-carousel.is-dragging { cursor: grabbing; scroll-behavior: auto; }
+
+    .foto-item {
+      flex: 0 0 auto;
+      width: 380px;
+      height: 500px;
+      background: #1e1e1e;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      scroll-snap-align: start;
+      border-radius: 8px;
+    }
+
+    .foto-item img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .7s cubic-bezier(.25,.46,.45,.94);
+      pointer-events: none;
+    }
+
+    .foto-item::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.5) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity .4s ease;
+      pointer-events: none;
+    }
+
+    .foto-item:hover img { transform: scale(1.06); }
+    .foto-item:hover::after { opacity: 1; }
+
+    /* edge hover zones */
+    .foto-carousel-edge {
+      position: absolute;
+      top: 0;
+      width: 140px;
+      height: calc(100% - 60px);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity .3s ease;
+      cursor: pointer;
+    }
+
+    .foto-carousel-edge--left  { left: 0;  background: linear-gradient(to right, rgba(8,8,8,.7) 0%, transparent 100%); }
+    .foto-carousel-edge--right { right: 0; background: linear-gradient(to left,  rgba(8,8,8,.7) 0%, transparent 100%); }
+
+    .foto-carousel-wrap:hover .foto-carousel-edge { opacity: 1; }
+
+    .foto-carousel-edge__btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(var(--black), var(--black)) padding-box, var(--grad) border-box;
+      border: 1.5px solid transparent;
+      color: #f5c41a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: box-shadow .3s ease, background .3s ease, transform .3s ease;
+      pointer-events: none;
+    }
+
+    .foto-carousel-edge:hover .foto-carousel-edge__btn {
+      background: var(--grad) padding-box, var(--grad) border-box;
+      color: #fff;
+      box-shadow: 0 0 28px var(--grad-glow-b), 0 0 8px var(--grad-glow-a);
+      transform: scale(1.1);
+    }
+
+    .foto-carousel-edge__btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .foto-carousel-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding: 0 2px;
+    }
+
+    .foto-carousel-count {
+      font-size: 11px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--gray-light);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .foto-carousel-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .foto-carousel-dot {
+      width: 24px;
+      height: 2px;
+      background: var(--gray-mid);
+      border-radius: 2px;
+      transition: background .3s ease, width .3s ease;
+      cursor: pointer;
+    }
+
+    .foto-carousel-dot.is-active {
+      background: var(--grad);
+      width: 40px;
+    }
+
+    /* ── FOTO TAGS ── */
+    .foto-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .foto-tag {
+      padding: 10px 20px;
+      border: 1px solid var(--gray-mid);
+      border-radius: 100px;
+      font-size: 13px;
+      letter-spacing: .04em;
+      color: rgba(255,255,255,.55);
+      transition: border-color .3s ease, color .3s ease;
+    }
+
+    .foto-tag:hover {
+      border-color: rgba(245,196,26,.4);
+      color: rgba(255,255,255,.9);
+    }
+
+    /* ── O NÁS ── */
+    #o-nas { border-top: 1px solid var(--gray-mid); }
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: stretch;
+    }
+
+    .about-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .about-content p {
+      font-size: 15px;
+      line-height: 1.85;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 24px;
+    }
+
+    .about-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      justify-content: stretch;
+    }
+
+    .stat-item {
+      flex: 1;
+      padding: 28px 32px;
+      border-top: 1px solid var(--gray-mid);
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      position: relative;
+      transition: background .3s ease;
+    }
+
+    .stat-item:last-child {
+      border-bottom: 1px solid var(--gray-mid);
+    }
+
+    .stat-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--grad);
+      opacity: 0;
+      transition: opacity .3s ease;
+    }
+
+    .stat-item:hover { background: rgba(255,255,255,.02); }
+    .stat-item:hover::before { opacity: 1; }
+
+    .stat-number {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -.04em;
+      line-height: 1;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      flex-shrink: 0;
+      min-width: 90px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      letter-spacing: .04em;
+      color: rgba(255,255,255,.5);
+      line-height: 1.4;
+    }
+
+    /* ── REFERENCE ── */
+    #reference {
+      border-top: 1px solid var(--gray-mid);
+      background: var(--gray-dark);
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .testimonial-item {
+      padding: 44px 36px;
+      background: var(--black);
+      border: 1px solid var(--gray-mid);
+    }
+
+    .testimonial-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      font-style: italic;
+      line-height: 1.65;
+      color: rgba(255,255,255,.78);
+      margin-bottom: 32px;
+    }
+
+    .testimonial-author {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .testimonial-company {
+      font-size: 12px;
+      color: var(--gray-light);
+      letter-spacing: .06em;
+    }
+
+    /* ── KONTAKT ── */
+    #kontakt {
+      border-top: 1px solid var(--gray-mid);
+      text-align: center;
+    }
+
+    .contact-headline {
+      font-size: clamp(36px, 4.8vw, 74px);
+      font-weight: 600;
+      letter-spacing: -.025em;
+      line-height: 1.06;
+      margin-bottom: 20px;
+    }
+
+    .contact-headline em {
+      font-family: 'Space Grotesk', sans-serif;
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .contact-sub {
+      font-size: 15px;
+      color: var(--gray-light);
+      margin-bottom: 56px;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .contact-email {
+      font-size: 20px;
+      color: var(--white);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,.25);
+      padding-bottom: 3px;
+      transition: border-color .25s;
+      display: inline-block;
+      margin-bottom: 64px;
+    }
+    .contact-email:hover { border-color: var(--white); }
+
+    .social-icons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 64px;
+      justify-content: center;
+    }
+
+    .social-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,.55);
+      text-decoration: none;
+      transition: border-color .25s, color .25s, box-shadow .25s, background .25s;
+    }
+
+    .social-icon:hover {
+      border-color: transparent;
+      background: linear-gradient(var(--black), var(--black)) padding-box,
+                  var(--grad) border-box;
+      color: #f5c41a;
+      box-shadow: 0 0 16px var(--grad-glow-a), 0 0 8px var(--grad-glow-b);
+    }
+
+    .social-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .contact-form {
+      max-width: 540px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .form-group { margin-bottom: 12px; }
+
+    .form-group label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--gray-light);
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--gray-mid);
+      color: var(--white);
+      padding: 13px 14px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .25s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: rgba(255,255,255,.4); }
+
+    .form-group textarea { resize: none; height: 130px; }
+
+    .form-submit {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--gray-mid);
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer__logo { height: 22px; }
+    .footer__logo img { height: 100%; width: auto; display: block; }
+
+    .footer__copy {
+      font-size: 12px;
+      color: #444;
+      letter-spacing: .04em;
+    }
+
+    .footer__social { display: flex; gap: 24px; }
+
+    .footer__social a {
+      font-size: 12px;
+      color: #444;
+      text-decoration: none;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: color .25s;
+    }
+    .footer__social a:hover { color: var(--white); }
+
+    /* ── CUSTOM CURSOR ── */
+    * { cursor: none !important; }
+
+    .cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      will-change: transform;
+    }
+
+    .cursor__dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      transition: opacity .3s ease, transform .3s ease;
+    }
+
+    .cursor__img {
+      position: absolute;
+      width: 72px;
+      height: 72px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      transition: opacity .35s cubic-bezier(.34,1.56,.64,1),
+                  transform .35s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    .cursor.is-hover .cursor__dot {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(.4);
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .cursor.is-hover .cursor__img {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* ── HERO ENTRANCE ── */
+    .hero-anim {
+      opacity: 0;
+      transform: translateY(40px);
+      animation: heroIn .9s cubic-bezier(.25,.46,.45,.94) forwards;
+      animation-delay: var(--d, 0s);
+    }
+
+    @keyframes heroIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    [data-reveal data-scroll data-scroll-call="reveal"] {
+      opacity: 0;
+      transform: translateY(48px);
+      transition: opacity .75s cubic-bezier(.25,.46,.45,.94),
+                  transform .75s cubic-bezier(.25,.46,.45,.94);
+    }
+
+    [data-reveal data-scroll data-scroll-call="reveal"].is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    [data-reveal data-scroll data-scroll-call="reveal"="fade"] {
+      transform: none;
+    }
+
+    [data-reveal data-scroll data-scroll-call="reveal"][data-delay="1"] { transition-delay: .1s; }
+    [data-reveal data-scroll data-scroll-call="reveal"][data-delay="2"] { transition-delay: .2s; }
+    [data-reveal data-scroll data-scroll-call="reveal"][data-delay="3"] { transition-delay: .3s; }
+    [data-reveal data-scroll data-scroll-call="reveal"][data-delay="4"] { transition-delay: .4s; }
+    [data-reveal data-scroll data-scroll-call="reveal"][data-delay="5"] { transition-delay: .5s; }
+
+    /* ── TEXT MASK REVEAL ── */
+    .text-mask {
+      overflow: hidden;
+      display: block;
+    }
+
+    .animate-reveal {
+      opacity: 0;
+      transform: translateY(110%);
+      transition:
+        transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+        opacity 1.2s ease-out;
+      will-change: transform, opacity;
+    }
+
+    .animate-reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .animate-reveal[data-delay="1"] { transition-delay: .12s; }
+    .animate-reveal[data-delay="2"] { transition-delay: .24s; }
+    .animate-reveal[data-delay="3"] { transition-delay: .36s; }
+    .animate-reveal[data-delay="4"] { transition-delay: .48s; }
+    .animate-reveal[data-delay="5"] { transition-delay: .6s; }
+
+  </style>
+</head>
+<body>
+  <canvas id="dotCanvas" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+
+  <!-- ── CUSTOM CURSOR ── -->
+  <div class="cursor" id="cursor">
+    <div class="cursor__dot"></div>
+    <img class="cursor__img" src="Kurzor_logo/Kurzor_3.svg" alt="">
+  </div>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="#" class="nav__logo">
+      <img src="Image/header__logo.svg" alt="Moneyshot">
+    </a>
+    <ul class="nav__links">
+      <li><a href="#videoprodukce">Videoprodukce</a></li>
+      <li><a href="#foto">Foto</a></li>
+      <li><a href="#o-nas">O nás</a></li>
+      <li><a href="#reference">Reference</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+  </nav>
+
+  <div id="scroll-container" data-scroll-container>
+
+  <!-- ── HERO ── -->
+  <section id="hero">
+    <video class="hero__video" autoplay muted loop playsinline preload="auto">
+      <source src="video/showreel-web.mp4" type="video/mp4">
+    </video>
+    <div class="hero__overlay"></div>
+    <div class="hero__gradient"></div>
+    <div class="hero__content">
+      <div class="hero__top">
+        <p class="hero__label hero-anim" style="--d:.1s">Kreativní studio</p>
+        <h1 class="hero__headline hero-anim" style="--d:.2s">
+          Každá značka má příběh.<br>
+          My ten váš <em>zviditelníme.</em>
+        </h1>
+      </div>
+      <div class="hero__bottom">
+        <div class="hero__rating hero-anim" style="--d:.5s">
+          <div class="hero__stars">★★★★★ <span>5.0</span></div>
+          <div class="hero__rating-sub">Hodnocení na Google · <a href="#">Číst recenze</a></div>
+        </div>
+        <div class="hero__actions hero-anim" style="--d:.6s">
+          <a href="#kontakt" class="btn-hero">Poptat projekt</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROJEKTY ── -->
+  <section id="projekty" class="section">
+    <div class="text-mask" style="text-align:center;"><p class="section__label animate-reveal" data-scroll data-scroll-call="text-reveal">Naše práce</p></div>
+    <div class="text-mask" style="text-align:center;"><h2 class="section__title animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="1">Vybrané <em>projekty</em></h2></div>
+    <div class="projects-grid">
+      <div class="projects-col">
+        <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Biolife.mp4">
+          <div class="project-bg"></div>
+          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Biolife.mp4" type="video/mp4"></video>
+          <div class="project-overlay"><span class="project-name">Biolife</span><span class="project-category">Videoprodukce</span></div>
+        </div>
+        <div class="project-item project-item--zoom" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/George_videoklip.mp4">
+          <div class="project-bg"></div>
+          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/George_videoklip.mp4" type="video/mp4"></video>
+          <div class="project-overlay"><span class="project-name">George Videoklip</span><span class="project-category">Videoprodukce</span></div>
+        </div>
+        <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Matrix media.mp4">
+          <div class="project-bg"></div>
+          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Matrix media.mp4" type="video/mp4"></video>
+          <div class="project-overlay"><span class="project-name">Matrix Media</span><span class="project-category">Social media</span></div>
+        </div>
+      </div>
+      <div class="projects-col">
+        <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Max steakhouse.mp4">
+          <div class="project-bg"></div>
+          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Max steakhouse.mp4" type="video/mp4"></video>
+          <div class="project-overlay"><span class="project-name">Max Steakhouse</span><span class="project-category">Komerční foto</span></div>
+        </div>
+        <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Misura.mp4">
+          <div class="project-bg"></div>
+          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Misura.mp4" type="video/mp4"></video>
+          <div class="project-overlay"><span class="project-name">Misura</span><span class="project-category">Videoprodukce</span></div>
+        </div>
+        <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/OVB.mp4">
+          <div class="project-bg"></div>
+          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/OVB.mp4" type="video/mp4"></video>
+          <div class="project-overlay"><span class="project-name">OVB</span><span class="project-category">Videoprodukce</span></div>
+        </div>
+      </div>
+      <div class="projects-col">
+        <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Shaolin.mp4">
+          <div class="project-bg"></div>
+          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Shaolin.mp4" type="video/mp4"></video>
+          <div class="project-overlay"><span class="project-name">Shaolin</span><span class="project-category">Videoprodukce</span></div>
+        </div>
+        <div class="project-item" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/Swibli.mp4">
+          <div class="project-bg"></div>
+          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/Swibli.mp4" type="video/mp4"></video>
+          <div class="project-overlay"><span class="project-name">Swibli</span><span class="project-category">Social media</span></div>
+        </div>
+        <div class="project-item project-item--zoom" data-scroll data-scroll-call="project-reveal" data-video="video_compressed/TCD.mp4">
+          <div class="project-bg"></div>
+          <video class="project-video" muted loop playsinline preload="auto"><source src="video_compressed/TCD.mp4" type="video/mp4"></video>
+          <div class="project-overlay"><span class="project-name">TCD</span><span class="project-category">Videoprodukce</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="projects-footer">
+      <a href="#" class="btn-ghost">Zobrazit všechny projekty</a>
+    </div>
+  </section>
+
+  <!-- ── TICKER ── -->
+  <div class="ticker-wrap">
+  <div class="ticker ticker--hero">
+    <div class="ticker__track">
+      <span class="ticker__logo"><img src="Image/reference - loga/48b4360fa107c010981bc2ef5286a504.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/82550f314cfa7b196f6e5c81110201b8-logo-v2.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/OVB_Logo_3C.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/agriwell-logo.svg" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/cz_logo.svg" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/euronova-white-grey.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/fj_logo.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/logo-cobra.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/logo.0f283b.svg" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/logo.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/logo.svg" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/logo_stoclassupr.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/png-clipart-fleishmanhillard-public-relations-business-fleishman-hillard-canada-inc-management-business-blue-text.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <!-- Duplicate for seamless loop -->
+      <span class="ticker__logo"><img src="Image/reference - loga/48b4360fa107c010981bc2ef5286a504.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/82550f314cfa7b196f6e5c81110201b8-logo-v2.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/OVB_Logo_3C.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/agriwell-logo.svg" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/cz_logo.svg" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/euronova-white-grey.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/fj_logo.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/logo-cobra.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/logo.0f283b.svg" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/logo.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/logo.svg" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/logo_stoclassupr.png" alt=""></span>
+      <span class="ticker__sep"></span>
+      <span class="ticker__logo"><img src="Image/reference - loga/png-clipart-fleishmanhillard-public-relations-business-fleishman-hillard-canada-inc-management-business-blue-text.png" alt=""></span>
+      <span class="ticker__sep"></span>
+    </div>
+  </div>
+  </div>
+
+  <div style="height: 80px;"></div>
+
+  <!-- ── BLOK: JAK PŘEMÝŠLÍME + JAK TO FUNGUJE ── -->
+  <div style="background: var(--gray-dark); max-width: 1280px; margin: 0 auto; border-radius: 16px; overflow: hidden;">
+
+  <!-- ── VIDEOPRODUKCE ── -->
+  <section id="videoprodukce" class="section" style="padding-top: 56px;">
+    <div class="text-mask"><p class="vp-label animate-reveal" data-scroll data-scroll-call="text-reveal">Jak přemýšlíme</p></div>
+    <div class="vp-main" data-reveal>
+      <!-- Levá kolona -->
+      <div>
+        <div class="text-mask"><h2 class="vp-headline animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="1">
+          Příběh i vizuál.<br>
+          Jedno bez druhého<br>
+          <span class="muted">nefunguje.</span>
+        </h2></div>
+        <div class="text-mask"><p class="vp-body animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="2">Ve videu jsou pro nás zásadní dvě věci: příběh a vizuál. Příběh musí mít jasnou myšlenku a vizuál ji musí podpořit, ne přebít.</p></div>
+      </div>
+      <!-- Pravá kolona — karta -->
+      <div class="vp-card">
+        <p class="vp-card__label">Jsme dva. Doplňujeme se.</p>
+        <div class="vp-member">
+          <div class="vp-member__top">
+            <div class="vp-member__avatar"><img src="Image/TOM.jpg" alt="" style="object-position: 50% 0%;"></div>
+            <div>
+              <div class="vp-member__firstname">Tom</div>
+              <div class="vp-member__name">Logika &amp; sdělení</div>
+              <div class="vp-member__desc">Konzistence, myšlenka, příběh.</div>
+            </div>
+          </div>
+          <div class="vp-member__bio">
+            <div class="vp-member__role">Creative Director &amp; Founder</div>
+            <p>Tom má na starosti produkční a vizuální stránku věcí. Přemýšlí nad storytellingem mimo zaběhnuté šablony a nemá rád, když jsou záběry až příliš korporátní. Díky backgroundu ve fotografii má skvělý cit pro kompozici, světlo a celkovou atmosféru.</p>
+          </div>
+        </div>
+        <div class="vp-member">
+          <div class="vp-member__top">
+            <div class="vp-member__avatar"><img src="Image/JARDA.jpg" alt="" style="object-position: 50% 0%;"></div>
+            <div>
+              <div class="vp-member__firstname">Jarda</div>
+              <div class="vp-member__name">Vizuál &amp; atmosféra</div>
+              <div class="vp-member__desc">Obraz, světlo, pocit.</div>
+            </div>
+          </div>
+          <div class="vp-member__bio">
+            <div class="vp-member__role">Creative Director &amp; Founder</div>
+            <p>Jarda drží projekty pohromadě po příběhové stránce. Řeší strukturu scénáře, aby všechno dávalo smysl jako celek. Umí propojit jednotlivé scény tak, aby výsledek fungoval přirozeně a plynule.</p>
+          </div>
+        </div>
+        <p class="vp-quote">„Někdy to mezi námi zajiskří — ale právě díky tomu hledáme nejlepší balanc."</p>
+      </div>
+    </div>
+
+    <!-- Co tvoříme -->
+    <div data-reveal data-delay="2" style="margin-top: -40px;">
+      <p class="vp-services-label">Co tvoříme</p>
+      <div class="vp-services">
+        <div class="vp-service-item">
+          <div class="vp-service-item__content">
+            <div class="vp-service-num">01</div>
+            <div class="vp-service-name">Reklamní spoty</div>
+          </div>
+          <div class="vp-service-video-wrap">
+            <video src="video/Video Produkce /reklamni-spoty-web.mp4" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
+        <div class="vp-service-item">
+          <div class="vp-service-item__content">
+            <div class="vp-service-num">02</div>
+            <div class="vp-service-name">Obsah pro sociální sítě</div>
+          </div>
+          <div class="vp-service-video-wrap">
+            <video src="video/Video Produkce /obsah-socialni-site-web.mp4" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
+        <div class="vp-service-item">
+          <div class="vp-service-item__content">
+            <div class="vp-service-num">03</div>
+            <div class="vp-service-name">Firemní videa</div>
+          </div>
+          <div class="vp-service-video-wrap">
+            <video src="video/Video Produkce /firemni-videa-web.mp4" muted loop playsinline preload="none"></video>
+          </div>
+        </div>
+        <div class="vp-service-item"><div class="vp-service-item__content"><div class="vp-service-num">04</div><div class="vp-service-name">CLV kampaně</div></div></div>
+        <div class="vp-service-item"><div class="vp-service-item__content"><div class="vp-service-num">05</div><div class="vp-service-name">B2B videa</div></div></div>
+        <div class="vp-service-item"><div class="vp-service-item__content"><div class="vp-service-num">06</div><div class="vp-service-name">Fotografie</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WORKFLOW ── -->
+  <section id="workflow" class="section" style="border-top: 1px solid rgba(255,255,255,.06);">
+    <div class="text-mask"><p class="section__label animate-reveal" data-scroll data-scroll-call="text-reveal">Jak to funguje</p></div>
+    <div class="wf-section" style="border-top: none;">
+      <div class="wf-left">
+        <div class="wf-header">
+          <div class="text-mask"><h2 class="wf-title animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="1">Od nápadu<br>k&nbsp;<span class="wf-muted">výsledku.</span></h2></div>
+        </div>
+        <div class="text-mask"><p class="wf-subtitle animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="2">Každý projekt je jiný, ale náš přístup zůstává stejný — pečlivá příprava, jasná komunikace a výsledek, který opravdu funguje.</p></div>
+      </div>
+      <div class="wf-steps">
+
+        <div class="wf-step">
+          <div class="wf-step__top">
+            <span class="wf-step__num">01</span>
+            <h3 class="wf-step__name">Zadání</h3>
+            <span class="wf-step__arrow">↗</span>
+          </div>
+          <div class="wf-step__body"><div class="wf-step__body-inner">
+            <p>Prvním krokem je osobní nebo online schůzka, na které si ujasníme, co od videa očekáváte, jaké máte cíle a jakým stylem se chceme vydat. Spolupráci formálně potvrdíme a vystavíme zálohovou fakturou.</p>
+            <p>Po jejím uhrazení začínáme s produkční přípravou. Pokud v projektu počítáme i s herci, zajistíme kompletní smluvní agendu za vás, aby celý proces probíhal bezpečně a bez zbytečných komplikací.</p>
+          </div></div>
+        </div>
+
+        <div class="wf-step">
+          <div class="wf-step__top">
+            <span class="wf-step__num">02</span>
+            <h3 class="wf-step__name">Preprodukce</h3>
+            <span class="wf-step__arrow">↗</span>
+          </div>
+          <div class="wf-step__body"><div class="wf-step__body-inner">
+            <p>Připravujeme moodboardy, shooting list a celkový plán natáčení. U hraných spotů řešíme casting, herce, lokace i styling. Součástí jsou také obhlídky lokace — obvykle s týdenním až čtrnáctidenním předstihem.</p>
+            <div class="wf-step__note">
+              <strong>Poznámka</strong>
+              <p>Obhlídka lokace není nutnost — je to nadstandard, který výrazně zlepšuje výsledek. Pomáhá odhalit nástrahy, které by v den natáčení mohly zkomplikovat produkci. U větších projektů to rozhodně dává smysl.</p>
+            </div>
+          </div></div>
+        </div>
+
+        <div class="wf-step">
+          <div class="wf-step__top">
+            <span class="wf-step__num">03</span>
+            <h3 class="wf-step__name">Produkce</h3>
+            <span class="wf-step__arrow">↗</span>
+          </div>
+          <div class="wf-step__body"><div class="wf-step__body-inner">
+            <p>Přijedeme, natočíme a beze stopy odjedeme. Někdy je produkce jednodušší, jindy náročnější — jsme připraveni na obě varianty.</p>
+            <p>Pokud chcete, můžete být u natáčení s námi. Na place je k dispozici náhledový monitor, takže můžete průběžně sledovat, jak scéna vypadá, a dát zpětnou vazbu rovnou na místě.</p>
+          </div></div>
+        </div>
+
+        <div class="wf-step">
+          <div class="wf-step__top">
+            <span class="wf-step__num">04</span>
+            <h3 class="wf-step__name">Postprodukce</h3>
+            <span class="wf-step__arrow">↗</span>
+          </div>
+          <div class="wf-step__body"><div class="wf-step__body-inner">
+            <p>Video v postprodukci dostává svůj finální rytmus, atmosféru a podobu. Záběry pečlivě vybereme a sestříháme, doplníme hudbu, sound design, voiceover nebo grafiku.</p>
+            <p>Výsledné video dodáme v domluvených formátech i termínu — standardně nejpozději do dvou týdnů od natáčení.</p>
+          </div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  </div><!-- end blok -->
+
+  <!-- ── FOTO ── -->
+  <section id="foto" class="section" style="border-top: 1px solid var(--gray-mid); padding-bottom: 40px;">
+    <div style="text-align: center; max-width: 640px; margin: 0 auto 56px;">
+      <div class="text-mask"><p class="section__label animate-reveal" data-scroll data-scroll-call="text-reveal">Naše služby</p></div>
+      <div class="text-mask"><h2 class="wf-title animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="1">Produktové<br><span class="wf-muted">fotografie.</span></h2></div>
+      <div class="text-mask"><p class="wf-subtitle animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="2">Komerční fotografie, která prodává. Každý snímek tvoříme s důrazem na světlo, kompozici a celkový dojem, který zanechá na zákazníkovi.</p></div>
+    </div>
+    <div class="foto-tags" data-reveal data-scroll data-scroll-call="reveal">
+      <span class="foto-tag">Produktová fotografie</span>
+      <span class="foto-tag">Lifestyle a brand foto</span>
+      <span class="foto-tag">Portrétní a týmové focení</span>
+      <span class="foto-tag">Eventová fotografie</span>
+      <span class="foto-tag">Postprodukce a retušování</span>
+    </div>
+  </section>
+
+  <!-- ── FOTO CAROUSEL ── -->
+  <section class="section" style="padding-top:0;">
+    <div class="foto-carousel-wrap">
+      <!-- edge zones -->
+      <div class="foto-carousel-edge foto-carousel-edge--left" id="fotoPrev">
+        <div class="foto-carousel-edge__btn">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+      </div>
+      <div class="foto-carousel-edge foto-carousel-edge--right" id="fotoNext">
+        <div class="foto-carousel-edge__btn">
+          <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+        </div>
+      </div>
+      <!-- track -->
+      <div class="foto-carousel" id="fotoCarousel">
+        <div class="foto-item" data-photo="Image/produktove foto/DSC08967-Edit-Edit - wide.jpg"><img src="Image/produktove foto/DSC08967-Edit-Edit - wide.jpg" alt=""></div>
+        <div class="foto-item" data-photo="Image/produktove foto/DSC00130-Edit-Edit.jpg"><img src="Image/produktove foto/DSC00130-Edit-Edit.jpg" alt=""></div>
+        <div class="foto-item" data-photo="Image/produktove foto/small pack mood.jpg"><img src="Image/produktove foto/small pack mood.jpg" alt=""></div>
+        <div class="foto-item" data-photo="Image/produktove foto/DSC00762-Mustard.jpg"><img src="Image/produktove foto/DSC00762-Mustard.jpg" alt=""></div>
+        <div class="foto-item" data-photo="Image/produktove foto/Firestorm - Doom.jpg"><img src="Image/produktove foto/Firestorm - Doom.jpg" alt=""></div>
+      </div>
+      <!-- nav bar -->
+      <div class="foto-carousel-nav">
+        <span class="foto-carousel-count" id="fotoCount">01 / 05</span>
+        <div class="foto-carousel-dots" id="fotoDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── O NÁS ── -->
+  <section id="o-nas" class="section">
+    <div class="text-mask" style="text-align:center;"><p class="section__label animate-reveal" data-scroll data-scroll-call="text-reveal">Náš příběh</p></div>
+    <div class="text-mask" style="text-align:center;"><h2 class="section__title animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="1">Každá značka<br>má svůj <em>příběh.</em></h2></div>
+    <div class="about-layout">
+      <div class="about-content">
+        <div class="text-mask"><p class="animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="2">Když jsme se jako dva začínající tvůrci sešli v bytě na Smíchově, vůbec jsme netušili, že je to začátek něčeho velkého. Původně jsme si od sebe chtěli jen půjčit techniku a prohodit pár slov.</p></div>
+        <div class="text-mask"><p class="animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="3">Oba jsme ale cítili, že by naše přístupy, nápady a energie mohly skvěle fungovat dohromady. Začali jsme tvořit vlastní projekty jen pro radost a od té chvíle se všechno začalo nabalovat jako sněhová koule. Dlouhé večery, nové nápady, první společné produkce a neustálá chuť posouvat se dál.</p></div>
+        <div class="text-mask"><p class="animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="4">Začínali jsme jako dva kluci s vášní pro tvorbu. Dnes kolem sebe máme silný tým skvělých lidí, kteří s námi posouvají každý projekt zase o kus dál. Našli jsme se v práci, která nás naplňuje, a právě to je dodnes to, co nás žene dopředu.</p></div>
+        <a href="#kontakt" class="btn-primary" data-reveal data-scroll data-scroll-call="reveal" data-delay="5" style="margin-top:16px;">Pojďme spolupracovat</a>
+      </div>
+      <div class="about-stats">
+        <div class="stat-item" data-reveal data-scroll data-scroll-call="reveal" data-delay="2">
+          <div class="stat-number">120+</div>
+          <div class="stat-label">Dokončených projektů</div>
+        </div>
+        <div class="stat-item" data-reveal data-scroll data-scroll-call="reveal" data-delay="3">
+          <div class="stat-number">40+</div>
+          <div class="stat-label">Spokojených klientů</div>
+        </div>
+        <div class="stat-item" data-reveal data-scroll data-scroll-call="reveal" data-delay="4">
+          <div class="stat-number">6</div>
+          <div class="stat-label">Let zkušeností</div>
+        </div>
+        <div class="stat-item" data-reveal data-scroll data-scroll-call="reveal" data-delay="5">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Členové týmu</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section id="faq" class="section faq-section">
+    <div class="faq-header" style="text-align:center;">
+      <div class="text-mask"><p class="section__label animate-reveal" data-scroll data-scroll-call="text-reveal">Časté otázky</p></div>
+      <div class="text-mask"><h2 class="faq-title animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="1">Otázky &amp;<br><span class="wf-muted">odpovědi.</span></h2></div>
+    </div>
+    <div class="faq-cols">
+      <div class="faq-steps">
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">01</span>
+            <h3 class="faq-step__q">Kolik to vlastně celé stojí?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>Cena videa závisí hlavně na náročnosti projektu. Roli hraje počet natáčecích dnů, lokace, obsazení, velikost produkce i požadavky na postprodukci, animace nebo vizuální efekty. Nejčastěji se pohybujeme v rozmezí zhruba 50 až 500 tisíc korun.</p>
+            <p>Každý projekt naceňujeme individuálně, konkrétní cenu vám pošleme v přehledné cenové nabídce.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">02</span>
+            <h3 class="faq-step__q">Jak dlouho trvá produkce videa?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>Samotné natáčení většinou zabere jeden až tři dny a často je to ta nejkratší část celého procesu. Více času obvykle padne na přípravy před natáčením a následnou postprodukci. Výsledná délka realizace pak záleží na rozsahu a náročnosti projektu.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">03</span>
+            <h3 class="faq-step__q">Kde všude natáčíte?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>Sídlíme v Praze, ale projekty realizujeme po celé ČR. U mimopražských zakázek je potřeba počítat s dopravou, kromě toho nám ale nic nebrání dojet za vámi kamkoliv bude třeba.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">04</span>
+            <h3 class="faq-step__q">Jaký typ videa je pro nás vhodný?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>To záleží hlavně na tom, čeho chcete videem dosáhnout. Každý projekt zpravidla začíná osobní nebo online schůzkou, během které probereme vaši představu i cíle. Následně společně určíme, jestli je pro vás vhodnější brandové video, explainer pro B2B segment, nebo výkonnostní obsah pro sociální sítě.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">05</span>
+            <h3 class="faq-step__q">Děláte videa jen pro velké značky?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>Pracujeme na větších i menších kampaních. Nejde nám o velikost značky, ale o přístup. Tvoříme obsah pro klienty, kteří berou svou komunikaci vážně a chápou, že dobrý výsledek nevzniká náhodou.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">06</span>
+            <h3 class="faq-step__q">Co všechno dokážete zajistit?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>Zajistíme celý proces výroby videa od začátku do konce. Pomůžeme vám definovat zadání, připravíme kreativní koncept i scénář a postaráme se o produkční zajištění včetně herců, maskérky, kostýmů a profesionálního štábu.</p>
+            <p>Následně navazuje postprodukce, která může zahrnovat střih, color grading, animace, vizuální efekty, voiceovery nebo jazykové mutace.</p>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="faq-steps">
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">07</span>
+            <h3 class="faq-step__q">Můžeme být s vámi na place?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>Ano, určitě. Přítomnost klienta na place je často výhodou, protože svůj produkt nebo službu znáte nejlépe právě vy. Na místě navíc bývá k dispozici náhledový monitor, takže můžete průběžně sledovat, jak scéna vypadá, a případně se hned vyjádřit.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">08</span>
+            <h3 class="faq-step__q">Využíváte při tvorbě umělou inteligenci?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>Ano. Využíváme ji například při některých postprodukčních úpravách a speciálních efektech, největší přínos ale vidíme v preprodukční fázi. Umíme díky ní připravit první vizuální návrhy, rozvinout scénáře nebo vytvořit videoscript.</p>
+            <p>Díky tomu je celý proces již dopředu promyšlený.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">09</span>
+            <h3 class="faq-step__q">Děláte i samotnou postprodukci?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>Ano, postprodukční práce jsou běžnou součástí našich projektů. Umíme převzít již natočený materiál a zajistit střih, color grading, zvukové úpravy, animace nebo efekty. Primárně ale fungujeme jako produkční tým, který dokáže pokrýt celý proces výroby videa od začátku do konce.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">10</span>
+            <h3 class="faq-step__q">Pomáháte i s video kampaněmi?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>Za ty léta praxe jsme si kolem sebe vytvořili síť ověřených kontaktů z agenturního i externího prostředí, které můžeme rádi doporučit. Tyto služby sice in-house neposkytujeme, ale když je potřeba, umíme vás nasměrovat nebo propojit s vhodným partnerem.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">11</span>
+            <h3 class="faq-step__q">Vyplatí se dlouhodobá spolupráce?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>Ve většině případů ano. Čím lépe značku a její komunikaci známe, tím přesněji, rychleji a konzistentněji dokážeme obsah tvořit. Dlouhodobá spolupráce navíc obvykle přináší i větší efektivitu z produkčního hlediska, která se často pozitivně projeví i v ceně.</p>
+          </div></div>
+        </div>
+
+        <div class="faq-step">
+          <div class="faq-step__top">
+            <span class="faq-step__num">12</span>
+            <h3 class="faq-step__q">Co vás odlišuje od jiných produkcí?</h3>
+            <span class="faq-step__arrow">↗</span>
+          </div>
+          <div class="faq-step__body"><div class="faq-step__body-inner">
+            <p>Na trhu je dnes spousta velmi kvalitních produkcí. To, co je důležité pro nás, je náš vlastní způsob práce. Velký důraz klademe na přípravu, promyšlený scénář, přirozený projev na kameře a práci se světlem. Díky tomu dokážeme i z jednoduchého formátu nebo obyčejného prostoru dostat silný a profesionální výsledek.</p>
+            <p>Zároveň je pro nás důležitá lidskost a pohoda na place. Nejlepší bude, když se podíváte na osobní zkušenosti našich klientů s námi.</p>
+          </div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REFERENCE ── -->
+  <section id="reference" class="section">
+    <div class="text-mask" style="text-align:center;"><p class="section__label animate-reveal" data-scroll data-scroll-call="text-reveal">Co říkají klienti</p></div>
+    <div class="text-mask" style="text-align:center;"><h2 class="section__title animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="1">Re<em>ference</em></h2></div>
+    <div class="testimonials-grid">
+      <div class="testimonial-item" data-reveal data-scroll data-scroll-call="reveal" data-delay="1">
+        <p class="testimonial-quote">„Spolupráce s Moneyshot byla naprosto bezproblémová. Výsledné video předčilo naše očekávání a pomohlo nám výrazně zvýšit dosah kampaně."</p>
+        <div class="testimonial-author">Jan Novák</div>
+        <div class="testimonial-company">Dobrý klient s.r.o.</div>
+      </div>
+      <div class="testimonial-item" data-reveal data-scroll data-scroll-call="reveal" data-delay="2">
+        <p class="testimonial-quote">„Profesionální přístup od první schůzky až po finální dodání. Fotky jsou přesně to, co jsme potřebovali pro náš e-shop."</p>
+        <div class="testimonial-author">Marie Svobodová</div>
+        <div class="testimonial-company">Lepší klient a.s.</div>
+      </div>
+      <div class="testimonial-item" data-reveal data-scroll data-scroll-call="reveal" data-delay="3">
+        <p class="testimonial-quote">„Tým moneyshot rozumí brandové komunikaci. Jejich obsah funguje na sociálních sítích výrazně lépe než cokoli, co jsme vytvářeli dřív."</p>
+        <div class="testimonial-author">Petr Krejčí</div>
+        <div class="testimonial-company">Nejlepší klient group</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── KONTAKT ── -->
+  <section id="kontakt" class="section">
+    <div class="text-mask" style="text-align:center;"><p class="section__label animate-reveal" data-scroll data-scroll-call="text-reveal">Začněme spolupracovat</p></div>
+    <div class="text-mask" style="text-align:center;"><h2 class="contact-headline animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="1">Máš projekt?<br><em>Ozveme se.</em></h2></div>
+    <div class="text-mask" style="text-align:center;"><p class="contact-sub animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="2">Napiš nám o svém projektu a my se ti ozveme do 24 hodin s návrhem, jak ti pomoci.</p></div>
+    <a href="mailto:hello@moneyshot.cz" class="contact-email" data-reveal data-scroll data-scroll-call="reveal" data-delay="3">hello@moneyshot.cz</a>
+
+    <div class="social-icons" data-reveal data-scroll data-scroll-call="reveal" data-delay="4">
+      <!-- Instagram -->
+      <a href="#" class="social-icon" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+      <!-- Facebook -->
+      <a href="#" class="social-icon" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <!-- LinkedIn -->
+      <a href="#" class="social-icon" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <!-- Google -->
+      <a href="#" class="social-icon" aria-label="Google">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg>
+      </a>
+      <!-- YouTube -->
+      <a href="#" class="social-icon" aria-label="YouTube">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      </a>
+    </div>
+
+    <form class="contact-form" data-reveal data-scroll data-scroll-call="reveal" data-delay="4" onsubmit="return false;">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Jméno</label>
+          <input type="text" placeholder="Jan Novák">
+        </div>
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" placeholder="jan@firma.cz">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Předmět</label>
+        <input type="text" placeholder="O co se jedná?">
+      </div>
+      <div class="form-group">
+        <label>Zpráva</label>
+        <textarea placeholder="Řekni nám víc o svém projektu…"></textarea>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn-primary">Odeslat zprávu</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ── MODAL ── -->
+  <!-- ── FOOTER ── -->
+  <footer>
+    <a href="#" class="footer__logo">
+      <img src="Image/header__logo.svg" alt="Moneyshot">
+    </a>
+    <span class="footer__copy">© 2025 Moneyshot Studio. Všechna práva vyhrazena.</span>
+    <div class="footer__social">
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Vimeo</a>
+    </div>
+  </footer>
+
+  </div><!-- end scroll-container -->
+
+  <!-- modal musí být VNĚ scroll-containeru -->
+  <div class="modal" id="videoModal">
+    <div class="modal__inner">
+      <button class="modal__close" id="modalClose">✕</button>
+      <video class="modal__video" id="modalVideo" controls></video>
+      <img class="modal__image" id="modalImage" src="" alt="" style="display:none;">
+    </div>
+  </div>
+
+  <script src="libs/locomotive-scroll.min.js"></script>
+  <script>
+    // ── Locomotive Scroll ──
+    const locoScroll = new LocomotiveScroll({
+      el: document.querySelector('#scroll-container'),
+      smooth: true,
+      smoothMobile: false,
+      lerp: 0.08,
+      multiplier: 1.0,
+      getDirection: true
+    });
+
+    // ── Project tiles reveal via Locomotive ──
+    document.querySelectorAll('.project-item').forEach((item, i) => {
+      item.style.transitionDelay = `${i * 0.07}s`;
+    });
+
+    locoScroll.on('call', (value, way, obj) => {
+      if (value === 'project-reveal' && way === 'enter') {
+        obj.el.classList.add('in-view');
+        setTimeout(() => { obj.el.style.transitionDelay = '0s'; }, 900);
+      }
+      if (value === 'reveal' && way === 'enter') {
+        obj.el.classList.add('is-visible');
+      }
+      if (value === 'text-reveal' && way === 'enter') {
+        obj.el.classList.add('is-visible');
+      }
+    });
+
+    // ── Nav hide/show ──
+    const nav = document.querySelector('nav');
+    let lastScrollY = 0;
+
+    function updateNav(y, prevY) {
+      if (y <= 80) {
+        nav.classList.remove('nav--hidden');
+      } else if (y > prevY + 2) {
+        nav.classList.add('nav--hidden');
+      } else if (y < prevY - 2) {
+        nav.classList.remove('nav--hidden');
+      }
+    }
+
+    // Primary: Locomotive scroll event
+    locoScroll.on('scroll', ({ scroll }) => {
+      const y = scroll.y;
+      updateNav(y, lastScrollY);
+      lastScrollY = y;
+
+      // ── Nav active section ──
+      document.querySelectorAll('section[id]').forEach(section => {
+        const top = section.getBoundingClientRect().top;
+        if (top < window.innerHeight * 0.5 && top > -section.offsetHeight * 0.5) {
+          document.querySelectorAll('.nav__links a').forEach(a => a.style.color = '');
+          const active = document.querySelector(`.nav__links a[href="#${section.id}"]`);
+          if (active) active.style.color = '#ffffff';
+        }
+      });
+    });
+
+    // Fallback: wheel event
+    window.addEventListener('wheel', (e) => {
+      const y = locoScroll.scroll?.instance?.scroll?.y ?? lastScrollY;
+      if (y <= 80) { nav.classList.remove('nav--hidden'); return; }
+      if (e.deltaY > 3) nav.classList.add('nav--hidden');
+      else if (e.deltaY < -3) nav.classList.remove('nav--hidden');
+    }, { passive: true });
+
+    // ── Hero video autoplay fallback ──
+    const heroVideo = document.querySelector('.hero__video');
+    if (heroVideo) {
+      heroVideo.play().catch(() => {});
+    }
+
+    // ── Project video hover play + static thumbnail frame ──
+    const frameTimes = [2, 1.5, 3, 2, 1, 2.5, 35, 2, 3];
+
+    document.querySelectorAll('.project-video').forEach((vid, i) => {
+      const t = frameTimes[i] || 2;
+      const item = vid.closest('.project-item');
+
+      // Seek to thumbnail frame once enough data is loaded
+      const showFrame = () => { vid.currentTime = t; };
+      vid.addEventListener('loadeddata', showFrame, { once: true });
+      vid.addEventListener('loadedmetadata', () => {
+        if (vid.readyState >= 2) showFrame();
+      }, { once: true });
+
+      item.addEventListener('mouseenter', () => { vid.play(); });
+      item.addEventListener('mouseleave', () => {
+        vid.pause();
+        vid.currentTime = t;
+      });
+    });
+
+    // ── Video + photo modal ──
+    const modal = document.getElementById('videoModal');
+    const modalVideo = document.getElementById('modalVideo');
+    const modalImage = document.getElementById('modalImage');
+    const modalClose = document.getElementById('modalClose');
+
+    document.querySelectorAll('.project-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const src = item.dataset.video;
+        if (!src) return;
+        modalImage.style.display = 'none';
+        modalVideo.style.display = 'block';
+        modalVideo.src = src;
+        modalVideo.play();
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    document.querySelectorAll('.foto-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const src = item.dataset.photo;
+        if (!src) return;
+        modalVideo.pause();
+        modalVideo.style.display = 'none';
+        modalVideo.src = '';
+        modalImage.src = src;
+        modalImage.style.display = 'block';
+        modal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    // ── FOTO CAROUSEL ──
+    const fotoCarousel = document.getElementById('fotoCarousel');
+    const fotoPrev = document.getElementById('fotoPrev');
+    const fotoNext = document.getElementById('fotoNext');
+    const fotoCount = document.getElementById('fotoCount');
+    const fotoDots = document.getElementById('fotoDots');
+
+    if (fotoCarousel) {
+      const items = fotoCarousel.querySelectorAll('.foto-item');
+      const total = items.length;
+      let current = 0;
+
+      // build dots
+      items.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'foto-carousel-dot' + (i === 0 ? ' is-active' : '');
+        dot.addEventListener('click', () => scrollToItem(i));
+        fotoDots.appendChild(dot);
+      });
+
+      function updateUI() {
+        fotoCount.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+        fotoDots.querySelectorAll('.foto-carousel-dot').forEach((d, i) => d.classList.toggle('is-active', i === current));
+      }
+
+      function scrollToItem(index) {
+        current = Math.max(0, Math.min(index, total - 1));
+        fotoCarousel.scrollTo({ left: items[current].offsetLeft, behavior: 'smooth' });
+        updateUI();
+      }
+
+      fotoPrev.addEventListener('click', () => scrollToItem(current - 1));
+      fotoNext.addEventListener('click', () => scrollToItem(current + 1));
+
+      // drag to scroll
+      let isDown = false, startX, scrollLeft;
+      fotoCarousel.addEventListener('mousedown', e => {
+        isDown = true;
+        fotoCarousel.classList.add('is-dragging');
+        startX = e.pageX - fotoCarousel.offsetLeft;
+        scrollLeft = fotoCarousel.scrollLeft;
+      });
+      fotoCarousel.addEventListener('mouseleave', () => { isDown = false; fotoCarousel.classList.remove('is-dragging'); });
+      fotoCarousel.addEventListener('mouseup', () => { isDown = false; fotoCarousel.classList.remove('is-dragging'); });
+      fotoCarousel.addEventListener('mousemove', e => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - fotoCarousel.offsetLeft;
+        fotoCarousel.scrollLeft = scrollLeft - (x - startX) * 1.4;
+      });
+
+      // sync on scroll
+      fotoCarousel.addEventListener('scroll', () => {
+        const itemW = items[0].offsetWidth + 8;
+        current = Math.round(fotoCarousel.scrollLeft / itemW);
+        updateUI();
+      });
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      modalVideo.pause();
+      modalVideo.src = '';
+      modalImage.src = '';
+      modalVideo.style.display = 'block';
+      modalImage.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── Custom cursor ──
+    const cursor = document.getElementById('cursor');
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let curX = mouseX;
+    let curY = mouseY;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    (function loop() {
+      curX += (mouseX - curX) * 0.13;
+      curY += (mouseY - curY) * 0.13;
+      cursor.style.transform = `translate(calc(-50% + ${curX}px), calc(-50% + ${curY}px))`;
+      requestAnimationFrame(loop);
+    })();
+
+    const clickableSelectors = 'a, button, .project-item, .foto-item';
+
+    document.querySelectorAll(clickableSelectors).forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('is-hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('is-hover'));
+    });
+
+    document.querySelectorAll('.wf-step__top, .faq-step__top').forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('is-hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('is-hover'));
+    });
+
+    // Nav + active state handled via locoScroll.on('scroll') above
+
+    // ── Scroll-reactive ticker ──
+    const tickerTrack = document.querySelector('.ticker__track');
+    let tickerX = 0;
+    let tickerBoost = 0;
+    const BASE_SPEED = 0.6;
+
+    // Wheel event — direct delta, works regardless of scroll mode
+    window.addEventListener('wheel', (e) => {
+      tickerBoost += e.deltaY * 0.04;
+    }, { passive: true });
+
+    requestAnimationFrame(() => {
+      const halfWidth = tickerTrack.scrollWidth / 2;
+      (function loop() {
+        tickerBoost *= 0.88;
+        tickerX -= BASE_SPEED + tickerBoost;
+        if (halfWidth > 0 && Math.abs(tickerX) >= halfWidth) tickerX += halfWidth;
+        tickerTrack.style.transform = `translateX(${tickerX}px)`;
+        requestAnimationFrame(loop);
+      })();
+    });
+  // ── SERVICE CARD VIDEOS ──
+  document.querySelectorAll('.vp-service-item').forEach(item => {
+    const video = item.querySelector('video');
+    if (!video) return;
+    item.addEventListener('mouseenter', () => {
+      video.play().catch(() => {});
+    });
+    item.addEventListener('mouseleave', () => {
+      video.pause();
+      video.currentTime = 0;
+    });
+  });
+  // ── Accordion: workflow + FAQ ──
+  document.querySelectorAll('.wf-step__top, .faq-step__top').forEach(top => {
+    top.addEventListener('click', () => {
+      const step = top.parentElement;
+      const isOpen = step.classList.contains('is-open');
+      // zavřít všechny ve stejném .wf-steps / .faq-steps
+      step.parentElement.querySelectorAll('.wf-step, .faq-step').forEach(s => s.classList.remove('is-open'));
+      if (!isOpen) step.classList.add('is-open');
+    });
+  });
+  </script>
+
+  <script>
+    // ── INTERACTIVE DOT GRID ──
+    const canvas = document.getElementById('dotCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const SPACING = 18;
+    const DOT_BASE = 0.8;
+    const DOT_MAX = 3;
+    const RADIUS = 560;
+
+    let mouse = { x: -9999, y: -9999 };
+    let cols, rows, dots = [];
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      cols = Math.ceil(canvas.width  / SPACING) + 1;
+      rows = Math.ceil(canvas.height / SPACING) + 1;
+      dots = [];
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          dots.push({ x: c * SPACING, y: r * SPACING, size: DOT_BASE });
+        }
+      }
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    window.addEventListener('mousemove', e => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    window.addEventListener('mouseleave', () => {
+      mouse.x = -9999;
+      mouse.y = -9999;
+    });
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (const dot of dots) {
+        const dx = dot.x - mouse.x;
+        const dy = dot.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const influence = Math.max(0, 1 - dist / RADIUS);
+        const size = DOT_BASE + (DOT_MAX - DOT_BASE) * influence * influence;
+        const alpha = 0.05 + 0.12 * influence * influence;
+        const brightness = Math.round(45 + 55 * influence * influence);
+
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${brightness},${brightness},${brightness},${alpha})`;
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+  </script>
+</body>
+</html>
