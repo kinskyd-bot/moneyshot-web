@@ -36,6 +36,12 @@
       overflow-x: hidden;
     }
 
+    /* ── PROPORTIONAL SCALING na velkých monitorech ── */
+    @media (min-width: 1441px) {
+      html {
+        zoom: calc(100vw / 1440);
+      }
+    }
 
     /* ── ABSTRACT BACKGROUND ── */
 
@@ -2860,17 +2866,6 @@
     }
 
     draw();
-  </script>
-
-  <script>
-    // ── PROPORTIONAL SCALING pro velké monitory ──
-    const BASE_WIDTH = 1440;
-    function applyZoom() {
-      const w = window.innerWidth;
-      document.documentElement.style.zoom = w > BASE_WIDTH ? (w / BASE_WIDTH) : '';
-    }
-    applyZoom();
-    window.addEventListener('resize', applyZoom);
   </script>
 </body>
 </html>
