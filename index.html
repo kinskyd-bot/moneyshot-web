@@ -36,6 +36,13 @@
       overflow-x: hidden;
     }
 
+    /* ── PROPORTIONAL SCALING na velkých monitorech ── */
+    @media (min-width: 1441px) {
+      html {
+        zoom: calc(100vw / 1440);
+      }
+    }
+
     /* ── ABSTRACT BACKGROUND ── */
 
     #scroll-container {
