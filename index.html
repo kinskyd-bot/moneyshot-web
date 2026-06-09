@@ -402,6 +402,14 @@
       opacity: 1;
     }
 
+    /* Tmavá loga — zesvětlit na šedou */
+    .ticker__logo img[src*="cobra"] {
+      filter: grayscale(1) invert(1) brightness(0.7);
+    }
+    .ticker__logo img[src*="cobra"]:hover {
+      filter: grayscale(0) invert(1) brightness(0.9);
+    }
+
 
     /* ── SECTION COMMON ── */
     .section {
