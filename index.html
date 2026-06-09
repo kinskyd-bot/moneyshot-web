@@ -1526,16 +1526,64 @@
       background: var(--gray-dark);
     }
 
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
+    .testimonials-carousel-wrap {
+      position: relative;
     }
 
+    .testimonials-carousel {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      cursor: grab;
+    }
+    .testimonials-carousel::-webkit-scrollbar { display: none; }
+    .testimonials-carousel.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+
     .testimonial-item {
+      flex: 0 0 calc(33.333% - 11px);
+      scroll-snap-align: start;
       padding: 44px 36px;
       background: var(--black);
       border: 1px solid var(--gray-mid);
+      border-radius: 8px;
+    }
+
+    /* Šipky */
+    .testimonials-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--gray-mid);
+      background: rgba(8,8,8,.85);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: border-color .2s, background .2s;
+    }
+    .testimonials-arrow:hover { border-color: rgba(245,196,26,.5); background: rgba(20,20,20,.95); }
+    .testimonials-arrow--prev { left: -24px; }
+    .testimonials-arrow--next { right: -24px; }
+
+    /* Tečky */
+    .testimonials-dots {
+      display: flex; gap: 8px; justify-content: center; margin-top: 28px;
+    }
+    .testimonials-dot {
+      width: 6px; height: 6px; border-radius: 100px;
+      background: rgba(255,255,255,.2);
+      transition: background .3s, width .3s;
+      cursor: pointer;
+    }
+    .testimonials-dot.is-active {
+      background: var(--grad);
+      width: 24px;
     }
 
     .testimonial-quote {
@@ -2396,21 +2444,30 @@
   <section id="reference" class="section">
     <div class="text-mask" style="text-align:center;"><p class="section__label animate-reveal" data-scroll data-scroll-call="text-reveal">Co říkají klienti</p></div>
     <div class="text-mask" style="text-align:center;"><h2 class="section__title animate-reveal" data-scroll data-scroll-call="text-reveal" data-delay="1">Re<em>ference</em></h2></div>
-    <div class="testimonials-grid">
-      <div class="testimonial-item" data-reveal data-scroll data-scroll-call="reveal" data-delay="1">
-        <p class="testimonial-quote">„Spolupráce s Moneyshot byla naprosto bezproblémová. Výsledné video předčilo naše očekávání a pomohlo nám výrazně zvýšit dosah kampaně."</p>
-        <div class="testimonial-author">Jan Novák</div>
-        <div class="testimonial-company">Dobrý klient s.r.o.</div>
+    <div class="testimonials-carousel-wrap" data-reveal>
+      <button class="testimonials-arrow testimonials-arrow--prev" aria-label="Předchozí">&#8592;</button>
+      <button class="testimonials-arrow testimonials-arrow--next" aria-label="Další">&#8594;</button>
+      <div class="testimonials-carousel" id="testimonialsCarousel">
+        <div class="testimonial-item">
+          <p class="testimonial-quote">„Spolupráce s Moneyshot byla naprosto bezproblémová. Výsledné video předčilo naše očekávání a pomohlo nám výrazně zvýšit dosah kampaně."</p>
+          <div class="testimonial-author">Jan Novák</div>
+          <div class="testimonial-company">Dobrý klient s.r.o.</div>
+        </div>
+        <div class="testimonial-item">
+          <p class="testimonial-quote">„Profesionální přístup od první schůzky až po finální dodání. Fotky jsou přesně to, co jsme potřebovali pro náš e-shop."</p>
+          <div class="testimonial-author">Marie Svobodová</div>
+          <div class="testimonial-company">Lepší klient a.s.</div>
+        </div>
+        <div class="testimonial-item">
+          <p class="testimonial-quote">„Tým moneyshot rozumí brandové komunikaci. Jejich obsah funguje na sociálních sítích výrazně lépe než cokoli, co jsme vytvářeli dřív."</p>
+          <div class="testimonial-author">Petr Krejčí</div>
+          <div class="testimonial-company">Nejlepší klient group</div>
+        </div>
       </div>
-      <div class="testimonial-item" data-reveal data-scroll data-scroll-call="reveal" data-delay="2">
-        <p class="testimonial-quote">„Profesionální přístup od první schůzky až po finální dodání. Fotky jsou přesně to, co jsme potřebovali pro náš e-shop."</p>
-        <div class="testimonial-author">Marie Svobodová</div>
-        <div class="testimonial-company">Lepší klient a.s.</div>
-      </div>
-      <div class="testimonial-item" data-reveal data-scroll data-scroll-call="reveal" data-delay="3">
-        <p class="testimonial-quote">„Tým moneyshot rozumí brandové komunikaci. Jejich obsah funguje na sociálních sítích výrazně lépe než cokoli, co jsme vytvářeli dřív."</p>
-        <div class="testimonial-author">Petr Krejčí</div>
-        <div class="testimonial-company">Nejlepší klient group</div>
+      <div class="testimonials-dots" id="testimonialsDots">
+        <div class="testimonials-dot is-active"></div>
+        <div class="testimonials-dot"></div>
+        <div class="testimonials-dot"></div>
       </div>
     </div>
   </section>
@@ -2789,6 +2846,62 @@
       if (!isOpen) step.classList.add('is-open');
     });
   });
+
+  // ── Testimonials carousel ──
+  (function() {
+    const carousel = document.getElementById('testimonialsCarousel');
+    const dots = document.querySelectorAll('#testimonialsDots .testimonials-dot');
+    const prevBtn = document.querySelector('.testimonials-arrow--prev');
+    const nextBtn = document.querySelector('.testimonials-arrow--next');
+    if (!carousel) return;
+
+    const items = carousel.querySelectorAll('.testimonial-item');
+    let current = 0;
+
+    function scrollTo(index) {
+      current = Math.max(0, Math.min(index, items.length - 1));
+      carousel.scrollTo({ left: items[current].offsetLeft, behavior: 'smooth' });
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
+    }
+
+    prevBtn.addEventListener('click', () => scrollTo(current - 1));
+    nextBtn.addEventListener('click', () => scrollTo(current + 1));
+    dots.forEach((d, i) => d.addEventListener('click', () => scrollTo(i)));
+
+    // Drag
+    let startX = 0, startScroll = 0, dragging = false;
+    carousel.addEventListener('mousedown', e => {
+      dragging = true; startX = e.pageX; startScroll = carousel.scrollLeft;
+      carousel.classList.add('is-dragging');
+    });
+    window.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      carousel.scrollLeft = startScroll - (e.pageX - startX);
+    });
+    window.addEventListener('mouseup', () => {
+      if (!dragging) return;
+      dragging = false;
+      carousel.classList.remove('is-dragging');
+      // snap to nearest
+      let closest = 0, minDist = Infinity;
+      items.forEach((item, i) => {
+        const dist = Math.abs(item.offsetLeft - carousel.scrollLeft);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+      scrollTo(closest);
+    });
+
+    // Sync dots on scroll
+    carousel.addEventListener('scroll', () => {
+      let closest = 0, minDist = Infinity;
+      items.forEach((item, i) => {
+        const dist = Math.abs(item.offsetLeft - carousel.scrollLeft);
+        if (dist < minDist) { minDist = dist; closest = i; }
+      });
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === closest));
+      current = closest;
+    });
+  })();
   </script>
 
   <script>
