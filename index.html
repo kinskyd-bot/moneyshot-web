@@ -403,10 +403,12 @@
     }
 
     /* Tmavá loga — zesvětlit na šedou */
-    .ticker__logo img[src*="cobra"] {
+    .ticker__logo img[src*="cobra"],
+    .ticker__logo img[src*="cz_logo"] {
       filter: grayscale(1) invert(1) brightness(0.7);
     }
-    .ticker__logo img[src*="cobra"]:hover {
+    .ticker__logo img[src*="cobra"]:hover,
+    .ticker__logo img[src*="cz_logo"]:hover {
       filter: grayscale(0) invert(1) brightness(0.9);
     }
 
