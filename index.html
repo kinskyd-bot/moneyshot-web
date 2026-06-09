@@ -1208,6 +1208,10 @@
       cursor: default;
       min-width: 0;
       z-index: 1;
+    }
+
+    .vp-service-item--clickable {
+      cursor: pointer;
       transition: flex .5s cubic-bezier(0.2, 0.8, 0.2, 1),
                   height .5s cubic-bezier(0.2, 0.8, 0.2, 1),
                   border-color .3s;
@@ -2055,7 +2059,7 @@
     <div data-reveal data-delay="2" style="margin-top: 48px;">
       <p class="vp-services-label">Co tvoříme</p>
       <div class="vp-services">
-        <div class="vp-service-item">
+        <div class="vp-service-item vp-service-item--clickable" data-video="video/Video Produkce /reklamni-spoty-web.mp4">
           <div class="vp-service-item__content">
             <div class="vp-service-num">01</div>
             <div class="vp-service-name">Reklamní spoty</div>
@@ -2064,7 +2068,7 @@
             <video src="video/Video Produkce /reklamni-spoty-web.mp4" muted loop playsinline preload="none"></video>
           </div>
         </div>
-        <div class="vp-service-item">
+        <div class="vp-service-item vp-service-item--clickable" data-video="video/Video Produkce /obsah-socialni-site-web.mp4">
           <div class="vp-service-item__content">
             <div class="vp-service-num">02</div>
             <div class="vp-service-name">Obsah pro sociální sítě</div>
@@ -2073,7 +2077,7 @@
             <video src="video/Video Produkce /obsah-socialni-site-web.mp4" muted loop playsinline preload="none"></video>
           </div>
         </div>
-        <div class="vp-service-item">
+        <div class="vp-service-item vp-service-item--clickable" data-video="video/Video Produkce /firemni-videa-web.mp4">
           <div class="vp-service-item__content">
             <div class="vp-service-num">03</div>
             <div class="vp-service-name">Firemní videa</div>
@@ -2609,7 +2613,7 @@
     const modalImage = document.getElementById('modalImage');
     const modalClose = document.getElementById('modalClose');
 
-    document.querySelectorAll('.project-item').forEach(item => {
+    document.querySelectorAll('.project-item, .vp-service-item--clickable').forEach(item => {
       item.addEventListener('click', () => {
         const src = item.dataset.video;
         if (!src) return;
