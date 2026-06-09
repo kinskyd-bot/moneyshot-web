@@ -243,6 +243,26 @@
       position: relative;
     }
 
+    .ticker-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--gray-mid);
+      background: rgba(8,8,8,.85);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: border-color .2s, background .2s;
+    }
+    .ticker-arrow:hover { border-color: rgba(245,196,26,.5); background: rgba(20,20,20,.95); }
+    .ticker-arrow--prev { left: 12px; }
+    .ticker-arrow--next { right: 12px; }
+
     .ticker-wrap::before,
     .ticker-wrap::after {
       content: '';
@@ -2006,6 +2026,8 @@
 
   <!-- ── TICKER ── -->
   <div class="ticker-wrap">
+  <button class="ticker-arrow ticker-arrow--prev" aria-label="Předchozí">&#8592;</button>
+  <button class="ticker-arrow ticker-arrow--next" aria-label="Další">&#8594;</button>
   <div class="ticker ticker--hero">
     <div class="ticker__track">
       <span class="ticker__logo"><img src="Image/reference - loga/48b4360fa107c010981bc2ef5286a504.png" alt=""></span>
@@ -2857,6 +2879,10 @@
 
     tickerWrap.addEventListener('mouseenter', () => { tickerHovered = true; });
     tickerWrap.addEventListener('mouseleave', () => { tickerHovered = false; });
+
+    // Šipky
+    document.querySelector('.ticker-arrow--prev').addEventListener('click', () => { tickerBoost -= 120; });
+    document.querySelector('.ticker-arrow--next').addEventListener('click', () => { tickerBoost += 120; });
 
     requestAnimationFrame(() => {
       const halfWidth = tickerTrack.scrollWidth / 2;
