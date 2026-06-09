@@ -389,9 +389,9 @@
     }
 
     .ticker__logo img {
-      height: 48px;
+      height: 56px;
       width: auto;
-      max-width: 160px;
+      max-width: 180px;
       object-fit: contain;
       display: block;
       filter: grayscale(1) brightness(1.4);
@@ -406,11 +406,13 @@
 
     /* Tmavá loga — zesvětlit na šedou */
     .ticker__logo img[src*="cobra"],
-    .ticker__logo img[src*="cz_logo"] {
+    .ticker__logo img[src*="cz_logo"],
+    .ticker__logo img[src*="0f283b"] {
       filter: grayscale(1) invert(1) brightness(0.7);
     }
     .ticker__logo img[src*="cobra"]:hover,
-    .ticker__logo img[src*="cz_logo"]:hover {
+    .ticker__logo img[src*="cz_logo"]:hover,
+    .ticker__logo img[src*="0f283b"]:hover {
       filter: grayscale(0) invert(1) brightness(0.9);
     }
 
