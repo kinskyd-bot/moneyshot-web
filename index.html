@@ -2841,22 +2841,30 @@
 
     // Nav + active state handled via locoScroll.on('scroll') above
 
-    // ── Scroll-reactive ticker ──
+    // ── Ticker ──
     const tickerTrack = document.querySelector('.ticker__track');
+    const tickerWrap = document.querySelector('.ticker-wrap');
     let tickerX = 0;
     let tickerBoost = 0;
+    let tickerHovered = false;
     const BASE_SPEED = 0.6;
 
-    // Wheel event — direct delta, works regardless of scroll mode
-    window.addEventListener('wheel', (e) => {
-      tickerBoost += e.deltaY * 0.04;
-    }, { passive: true });
+    // Wheel pouze nad tickerem
+    tickerWrap.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      tickerBoost += e.deltaY * 0.08;
+    }, { passive: false });
+
+    tickerWrap.addEventListener('mouseenter', () => { tickerHovered = true; });
+    tickerWrap.addEventListener('mouseleave', () => { tickerHovered = false; });
 
     requestAnimationFrame(() => {
       const halfWidth = tickerTrack.scrollWidth / 2;
       (function loop() {
         tickerBoost *= 0.88;
-        tickerX -= BASE_SPEED + tickerBoost;
+        // Auto-scroll zastaven při hoveru (pokud není boost z wheel)
+        const speed = tickerHovered && Math.abs(tickerBoost) < 0.1 ? 0 : BASE_SPEED;
+        tickerX -= speed + tickerBoost;
         if (halfWidth > 0 && Math.abs(tickerX) >= halfWidth) tickerX += halfWidth;
         tickerTrack.style.transform = `translateX(${tickerX}px)`;
         requestAnimationFrame(loop);
